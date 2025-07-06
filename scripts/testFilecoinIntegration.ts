@@ -78,25 +78,24 @@ async function testFilecoinIntegration() {
         timestamp: timestamp,
         filecoinCid: result.cid
       },
-      gas: utils.format.parseNearAmount('0.00003'), // 30 TGas
-      attachedDeposit: utils.format.parseNearAmount('0') // No deposit required
+      gas: BigInt('30000000000000'), // 30 TGas
+      attachedDeposit: BigInt('0') // No deposit required
     });
 
     console.log('✅ Smart contract call successful:');
-    console.log(`   Transaction: ${contractCall.transaction.hash}`);
-    console.log(`   Block: ${contractCall.transaction_outcome.block_hash}\n`);
+    console.log(`   Transaction: ${contractCall.transaction.hash}\n`);
 
     // Step 4: Verify data can be retrieved from contract
     console.log('🔍 Step 4: Verifying data retrieval from contract...');
     
-    const weatherData = await account.viewFunction(
-      contractId,
-      'getWeatherData',
-      {
+    const weatherData = await account.viewFunction({
+      contractId: contractId,
+      methodName: 'getWeatherData',
+      args: {
         stationId: stationId,
         timestamp: timestamp
       }
-    );
+    });
 
     if (weatherData && weatherData.filecoinCid === result.cid) {
       console.log('✅ Weather data retrieved from contract:');

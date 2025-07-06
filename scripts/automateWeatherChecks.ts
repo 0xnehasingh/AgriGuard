@@ -91,7 +91,8 @@ class WeatherAutomation {
         'receive_weather',
         'process_policy_claims',
         'update_policy_status'
-      ]
+      ],
+      useLocalViewExecution: false
     });
 
     console.log('✅ NEAR connection initialized');

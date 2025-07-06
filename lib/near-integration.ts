@@ -7,7 +7,6 @@ const config: ConnectConfig = {
   nodeUrl: 'https://rpc.testnet.near.org',
   walletUrl: 'https://testnet.mynearwallet.com/',
   helperUrl: 'https://helper.testnet.near.org',
-  explorerUrl: 'https://explorer.testnet.near.org',
 };
 
 // Retry configuration
@@ -202,7 +201,8 @@ export class NEARAgriGuard {
           'createPolicy',
           'fileClaim',
           'submitWeatherData'
-        ]
+        ],
+        useLocalViewExecution: false
       }
     ) as AgriGuardContract;
   }
@@ -219,7 +219,8 @@ export class NEARAgriGuard {
   signIn(): void {
     this.wallet.requestSignIn({
       contractId: this.contractId,
-      methodNames: ['createPolicy', 'fileClaim']
+      methodNames: ['createPolicy', 'fileClaim'],
+      keyType: 'ed25519'
     });
   }
 
@@ -272,9 +273,10 @@ export class NEARAgriGuard {
         );
       });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       throw new AgriGuardError(
         AgriGuardErrorType.CONTRACT_ERROR,
-        `Failed to create policy: ${error.message}`,
+        `Failed to create policy: ${errorMessage}`,
         error as Error
       );
     }
@@ -394,7 +396,8 @@ export class NEARAgriGuard {
         usdcContractId,
         {
           viewMethods: ['ft_balance_of', 'ft_metadata'],
-          changeMethods: ['ft_transfer_call']
+          changeMethods: ['ft_transfer_call'],
+          useLocalViewExecution: false
         }
       ) as any;
 
@@ -427,9 +430,10 @@ export class NEARAgriGuard {
       if (error instanceof AgriGuardError) {
         throw error;
       }
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       throw new AgriGuardError(
         AgriGuardErrorType.USDC_TRANSFER_ERROR,
-        `Failed to pay premium: ${error.message}`,
+        `Failed to pay premium: ${errorMessage}`,
         error as Error
       );
     }

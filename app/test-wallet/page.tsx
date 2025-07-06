@@ -48,7 +48,8 @@ export default function TestWalletPage() {
       try {
         logs.push(`📋 Network: ${selector.options.network}`);
         logs.push(`🔗 Debug mode: ${selector.options.debug}`);
-        logs.push(`🔧 Modules: ${selector.options.modules?.length || 0} wallets configured`);
+        const state = selector.store.getState();
+        logs.push(`🔧 Modules: ${state.modules?.length || 0} wallets configured`);
       } catch (err) {
         logs.push(`❌ Error reading selector options: ${err}`);
       }

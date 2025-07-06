@@ -170,7 +170,7 @@ async function storeOnFilecoin(
     
     // Login with email if provided
     if (config.email) {
-      await client.login(config.email)
+      await client.login(config.email as `${string}@${string}`)
       console.log(`🔐 Logged in with email: ${config.email}`)
     }
     

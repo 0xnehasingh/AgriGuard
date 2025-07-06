@@ -1,14 +1,19 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "target": "ES5",
+    "target": "ES2020",
+    "lib": ["ES2020"],
     "noEmit": true,
     "noImplicitAny": false,
+    "strict": false,
+    "module": "ES2020",
+    "moduleResolution": "node"
   },
-  "files": [
-    "src/contract.ts"
+  "include": [
+    "src/**/*.ts",
+    "sandbox-test/**/*.ts"
   ],
   "exclude": [
     "node_modules"
-  ],
+  ]
 }

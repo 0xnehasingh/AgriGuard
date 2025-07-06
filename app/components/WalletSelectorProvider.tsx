@@ -105,10 +105,12 @@ export const WalletSelectorProvider: React.FC<WalletProviderProps> = ({ children
       setError(null);
       console.log('🔄 Connecting wallet...');
       
-      const wallets = await selector.getWallets();
+      // Get available wallet modules from selector store
+      const state = selector.store.getState();
+      const wallets = state.modules;
       console.log('📱 Available wallets:', wallets.map(w => w.metadata.name));
       
-      const availableWallets = wallets.filter((wallet: any) => wallet.metadata.available);
+      const availableWallets = wallets.filter((wallet: any) => wallet.metadata.available !== false);
       console.log('✅ Available wallets:', availableWallets.map(w => w.metadata.name));
       
       if (availableWallets.length === 0) {
@@ -116,12 +118,14 @@ export const WalletSelectorProvider: React.FC<WalletProviderProps> = ({ children
       }
 
       // Connect to the first available wallet (usually MyNearWallet)
-      const wallet = availableWallets[0];
-      console.log('🔗 Connecting to:', wallet.metadata.name);
+      const walletModule = availableWallets[0];
+      console.log('🔗 Connecting to:', walletModule.metadata.name);
       
+      const wallet = await selector.wallet(walletModule.id);
       await wallet.signIn({
         contractId: CONTRACT_CONFIG.contractId,
         methodNames: Object.values(CONTRACT_CONFIG.methodNames),
+        accounts: [], // Required for hardware wallets, optional for others
       });
     } catch (err) {
       console.error('❌ Failed to connect wallet:', err);
@@ -274,7 +278,7 @@ export const WalletSelectorProvider: React.FC<WalletProviderProps> = ({ children
 
       console.log('✅ Policy created:', result);
       // Extract policy ID from transaction result
-      if ('transaction' in result && 'hash' in result.transaction) {
+      if (result && typeof result === 'object' && 'transaction' in result && 'hash' in result.transaction) {
         return result.transaction.hash;
       }
 

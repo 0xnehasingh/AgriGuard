@@ -36,7 +36,7 @@ export class MockUSDC {
   }
 
   @initialize({})
-  new({
+  init({
     owner_id,
     total_supply,
     metadata

@@ -19,7 +19,7 @@ interface TestPolicy {
 }
 
 class PolicySetup {
-  private near: Near;
+  private near!: Near;
   private contract: any;
   private contractId: string;
   private accountId: string;
@@ -36,9 +36,7 @@ class PolicySetup {
   async init() {
     console.log('🔄 Initializing NEAR connection...');
     
-    const keyStore = new keyStores.FileSystemKeyStore(
-      path.join(process.env.HOME || '.', '.near-credentials')
-    );
+    const keyStore = new keyStores.InMemoryKeyStore();
 
     const config = {
       networkId: 'testnet',
@@ -54,7 +52,8 @@ class PolicySetup {
     
     this.contract = new Contract(account, this.contractId, {
       viewMethods: ['get_policies', 'get_policy_by_id'],
-      changeMethods: ['create_policy']
+      changeMethods: ['create_policy'],
+      useLocalViewExecution: false
     });
 
     console.log('✅ NEAR connection initialized');
@@ -164,7 +163,7 @@ class PolicySetup {
       
       console.log(`\n📊 Found ${policies.length} policies:`);
       
-      policies.forEach((policy, index) => {
+      policies.forEach((policy: any, index: number) => {
         console.log(`\n${index + 1}. Policy ID: ${policy.policyId}`);
         console.log(`   Farmer: ${policy.farmerId}`);
         console.log(`   Crop: ${policy.cropType}`);
@@ -191,13 +190,13 @@ class PolicySetup {
       
       const summary = {
         total: policies.length,
-        active: policies.filter(p => p.status === 'active').length,
-        pending: policies.filter(p => p.status === 'pending').length,
-        paid: policies.filter(p => p.status === 'claimed').length,
-        totalCoverage: policies.reduce((sum, p) => sum + parseInt(p.coverageAmount), 0),
-        totalPremiums: policies.reduce((sum, p) => sum + parseInt(p.premiumAmount), 0),
-        cropTypes: [...new Set(policies.map(p => p.cropType))],
-        averageThreshold: policies.reduce((sum, p) => sum + p.rainfallThreshold, 0) / policies.length || 0
+        active: policies.filter((p: any) => p.status === 'active').length,
+        pending: policies.filter((p: any) => p.status === 'pending').length,
+        paid: policies.filter((p: any) => p.status === 'claimed').length,
+        totalCoverage: policies.reduce((sum: number, p: any) => sum + parseInt(p.coverageAmount), 0),
+        totalPremiums: policies.reduce((sum: number, p: any) => sum + parseInt(p.premiumAmount), 0),
+        cropTypes: [...new Set(policies.map((p: any) => p.cropType))],
+        averageThreshold: policies.reduce((sum: number, p: any) => sum + p.rainfallThreshold, 0) / policies.length || 0
       };
       
       console.log('\n📊 POLICY SUMMARY');
