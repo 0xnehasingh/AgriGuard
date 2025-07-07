@@ -2,7 +2,11 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { WalletSelectorProvider } from './components/WalletSelectorProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['system-ui', 'arial']
+})
 
 export const metadata = {
   title: 'AgriGuard - Smart Crop Insurance',
