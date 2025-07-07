@@ -1,0 +1,27 @@
+{
+  "name": "hello_near",
+  "version": "1.0.0",
+  "license": "(MIT AND Apache-2.0)",
+  "type": "module",
+  "scripts": {
+    "build": "near-sdk-js build src/agriguard-contract.ts build/agriguard_contract.wasm",
+    "build:mock-usdc": "near-sdk-js build sandbox-test/mock-usdc.ts build/mock-usdc.wasm",
+    "test": "$npm_execpath run build && $npm_execpath run build:mock-usdc && ava -- ./build/agriguard_contract.wasm",
+    "test:usdc": "$npm_execpath run build && $npm_execpath run build:mock-usdc && ava sandbox-test/agriguard-usdc.test.js",
+    "deploy": "./deploy.sh"
+  },
+  "dependencies": {
+    "near-sdk-js": "2.0.0"
+  },
+  "devDependencies": {
+    "ava": "^6.1.3",
+    "near-workspaces": "^4.0.0",
+    "typescript": "^5.4.5",
+    "@types/node": "^20.0.0"
+  },
+  "ava": {
+    "files": [
+      "sandbox-test/*.ava.js"
+    ]
+  }
+}
